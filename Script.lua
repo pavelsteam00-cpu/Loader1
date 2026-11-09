@@ -1,6 +1,5 @@
 -- Loader
 
-
 local repo = "https://raw.githubusercontent.com/pavelsteam00-cpu/UiLibary1/refs/heads/main/"
 
 local downloadOk, source = pcall(function()
@@ -80,7 +79,6 @@ local scriptDatabase = {
         Name = "Fust Survival",
         Code = [==[
 
-        
 -- Main
 
 local repo = "https://raw.githubusercontent.com/pavelsteam00-cpu/UiLibary1/refs/heads/main/"
@@ -159,15 +157,6 @@ end
 local combatColor = Color3.fromRGB(255, 255, 255)
 local sharedThickness = 1.5
 
-local boxColorTransparency = 0
-local nameColorTransparency = 0
-local weaponColorTransparency = 0
-local distanceColorTransparency = 0
-local chamsColorTransparency = 0.5
-local skeletonColorTransparency = 0
-local visibleColorTransparency = 0
-local invisibleColorTransparency = 0
-
 local aimSettings = {
     enabled      = false,
     method       = "Camera",
@@ -196,17 +185,21 @@ local visualsSettings = {
     maxDistance = 1000,
     boxEnabled = false,
     boxColor = Color3.fromRGB(255, 255, 255),
+    boxColorTransparency = 0,
     boxFilled = false,
     boxFillTransparency = 0.8,
     boxOutline = true,
     nameEnabled = false,
     nameColor = Color3.fromRGB(255, 255, 255),
+    nameColorTransparency = 0,
     nameOutline = true,
     weaponEnabled = false,
     weaponColor = Color3.fromRGB(255, 255, 255),
+    weaponColorTransparency = 0,
     weaponOutline = true,
     distanceEnabled = false,
     distanceColor = Color3.fromRGB(255, 255, 255),
+    distanceColorTransparency = 0,
     distanceOutline = true,
     healthBarEnabled = false,
     healthBarOutline = true,
@@ -214,9 +207,11 @@ local visualsSettings = {
     healthTextOutline = true,
     chamsEnabled = false,
     chamsColor = Color3.fromRGB(255, 255, 255),
+    chamsColorTransparency = 0,
     chamsOutline = true,
     skeletonEnabled = false,
     skeletonColor = Color3.fromRGB(255, 255, 255),
+    skeletonColorTransparency = 0,
 }
 
 local visualsTargets = { Player = true, Sleeper = false, Npc = false }
@@ -226,7 +221,9 @@ local teamCheckVisuals = false
 
 local visibleColorEnabled = false
 local visibleColor = Color3.fromRGB(110, 135, 200)
+local visibleColorTransparency = 0
 local invisibleColor = Color3.fromRGB(255, 255, 255)
+local invisibleColorTransparency = 0
 
 local function getActiveTargets()
     if not multiSelectEnabled then
@@ -355,9 +352,9 @@ local function createChams(character)
             hl.Adornee = part
             hl.DepthMode = Enum.HighlightDepthMode.AlwaysOnTop
             hl.FillColor = visualsSettings.chamsColor
-            hl.FillTransparency = chamsColorTransparency
+            hl.FillTransparency = visualsSettings.chamsColorTransparency
             hl.OutlineColor = visualsSettings.chamsColor
-            hl.OutlineTransparency = visualsSettings.chamsOutline and chamsColorTransparency or 1
+            hl.OutlineTransparency = visualsSettings.chamsOutline and visualsSettings.chamsColorTransparency or 1
             hl.Parent = part
             list[#list + 1] = hl
         end
@@ -372,7 +369,7 @@ local function createSkeleton(character)
         local l = Drawing.new("Line")
         l.Color = visualsSettings.skeletonColor
         l.Thickness = 1
-        l.Transparency = skeletonColorTransparency
+        l.Transparency = visualsSettings.skeletonColorTransparency
         l.Visible = false
         lines[i] = l
     end
@@ -613,8 +610,8 @@ local fovParts = {}
 local fovStyle = "Circle"
 local fovColor1 = combatColor
 local fovColor2 = combatColor
-local fovAlpha1 = 1
-local fovAlpha2 = 1
+local fovAlpha1 = 0
+local fovAlpha2 = 0
 local fovCircleEnabled = true
 local fovCurrentlyVisible = false
 local lastFovCx, lastFovCy, lastFovR, lastFovStyle = -1, -1, -1, nil
@@ -659,7 +656,7 @@ end
 
 local function applyFovAlpha()
     if not hasDrawing then return end
-    local transparency = (fovAlpha1 or 1)
+    local transparency = (fovAlpha1 or 0)
     pcall(function()
         for i = 1, fovCount do
             local d = fovParts[i]
@@ -677,7 +674,7 @@ local function updateFovColors()
             local d = fovParts[i]
             if d then
                 d.Color = lerpColor(fovColor1, fovColor2, (fovMidCos[i] + 1) / 2)
-                d.Transparency = (fovAlpha1 or 1)
+                d.Transparency = (fovAlpha1 or 0)
             end
         end
     end)
@@ -698,7 +695,7 @@ local function hideFov()
 end
 
 local function updateFov(mousePos)
-    if not fovCircleEnabled then hideFov(); return end
+    if not fovCircleEnabled or not aimSettings.enabled then hideFov(); return end
     local r = aimSettings.fov
     local cx, cy = mousePos.X, mousePos.Y
     if fovCurrentlyVisible and lastFovCx == cx and lastFovCy == cy and lastFovR == r and lastFovStyle == fovStyle then return end
@@ -710,7 +707,7 @@ local function updateFov(mousePos)
                 local d = fovParts[i]
                 if d then
                     d.Position = Vector2.new(cx + fovCosA0[i] * r, cy + fovSinA0[i] * r)
-                    d.Transparency = (fovAlpha1 or 1)
+                    d.Transparency = (fovAlpha1 or 0)
                     if not d.Visible then d.Visible = true end
                 end
             end
@@ -722,7 +719,7 @@ local function updateFov(mousePos)
                 if d then
                     d.From = Vector2.new(cx + fovCosA0[i] * r, cy + fovSinA0[i] * r)
                     d.To   = Vector2.new(cx + fovCosA1[i] * r, cy + fovSinA1[i] * r)
-                    d.Transparency = (fovAlpha1 or 1)
+                    d.Transparency = (fovAlpha1 or 0)
                     if not d.Visible then d.Visible = true end
                 end
             end
@@ -733,7 +730,7 @@ end
 local targetLineEnabled = false
 local targetLineColor1 = combatColor
 local targetLineColor2 = combatColor
-local targetLineAlpha = 1
+local targetLineAlpha = 0
 local targetLineDrawings = {}
 local targetLineSegments = 30
 local lineCurrentlyVisible = false
@@ -805,7 +802,7 @@ end
 local targetIconEnabled = false
 local targetIconColor1 = combatColor
 local targetIconColor2 = combatColor
-local targetIconAlpha = 1
+local targetIconAlpha = 0
 local targetIconLines = {}
 local targetIconSegments = 24
 local iconCurrentlyVisible = false
@@ -981,19 +978,19 @@ local function makeVisualEntry(name)
     boxFill.Thickness = 1; boxFill.Filled = true; boxFill.Color = visualsSettings.boxColor; boxFill.Transparency = 1 - visualsSettings.boxFillTransparency; boxFill.Visible = false
 
     local boxBorder = Drawing.new("Square")
-    boxBorder.Thickness = 1; boxBorder.Filled = false; boxBorder.Color = visualsSettings.boxColor; boxBorder.Transparency = 0; boxBorder.Visible = false
+    boxBorder.Thickness = 1; boxBorder.Filled = false; boxBorder.Color = visualsSettings.boxColor; boxBorder.Transparency = visualsSettings.boxColorTransparency; boxBorder.Visible = false
 
     local boxOutline = Drawing.new("Square")
-    boxOutline.Thickness = 1; boxOutline.Filled = false; boxOutline.Color = Color3.new(0, 0, 0); boxOutline.Transparency = 0; boxOutline.Visible = false
+    boxOutline.Thickness = 1; boxOutline.Filled = false; boxOutline.Color = Color3.new(0, 0, 0); boxOutline.Transparency = 1; boxOutline.Visible = false
 
     local nameText = Drawing.new("Text")
-    nameText.Size = 12; nameText.Center = true; nameText.Outline = true; nameText.Color = visualsSettings.nameColor; nameText.Transparency = 0; nameText.Visible = false; nameText.Text = name
+    nameText.Size = 12; nameText.Center = true; nameText.Outline = true; nameText.Color = visualsSettings.nameColor; nameText.Transparency = visualsSettings.nameColorTransparency; nameText.Visible = false; nameText.Text = name
 
     local weaponText = Drawing.new("Text")
-    weaponText.Size = 12; weaponText.Center = true; weaponText.Outline = true; weaponText.Color = visualsSettings.weaponColor; weaponText.Transparency = 0; weaponText.Visible = false; weaponText.Text = "None"
+    weaponText.Size = 12; weaponText.Center = true; weaponText.Outline = true; weaponText.Color = visualsSettings.weaponColor; weaponText.Transparency = visualsSettings.weaponColorTransparency; weaponText.Visible = false; weaponText.Text = "None"
 
     local distanceText = Drawing.new("Text")
-    distanceText.Size = 12; distanceText.Center = true; distanceText.Outline = true; distanceText.Color = visualsSettings.distanceColor; distanceText.Transparency = 0; distanceText.Visible = false
+    distanceText.Size = 12; distanceText.Center = true; distanceText.Outline = true; distanceText.Color = visualsSettings.distanceColor; distanceText.Transparency = visualsSettings.distanceColorTransparency; distanceText.Visible = false
 
     local healthBg = Drawing.new("Square")
     healthBg.Thickness = 1; healthBg.Filled = true; healthBg.Color = Color3.new(0, 0, 0); healthBg.Transparency = 1; healthBg.Visible = false
@@ -1006,7 +1003,7 @@ local function makeVisualEntry(name)
     end
 
     local healthText = Drawing.new("Text")
-    healthText.Size = 10; healthText.Center = false; healthText.Outline = true; healthText.Transparency = 0; healthText.Visible = false; healthText.Text = "100"
+    healthText.Size = 10; healthText.Center = false; healthText.Outline = true; healthText.Transparency = 1; healthText.Visible = false; healthText.Text = "100"
 
     return {
         boxFill = boxFill, boxBorder = boxBorder, boxOutline = boxOutline,
@@ -1145,25 +1142,18 @@ local function renderEntityVisual(e, model, lp, cam, md2)
     end
 
     local currentBoxColor = visualsSettings.boxColor
-    local currentBoxTransparency = boxColorTransparency or 0
+    local currentBoxTransparency = visualsSettings.boxColorTransparency
     local currentNameColor = visualsSettings.nameColor
-    local currentNameTransparency = nameColorTransparency or 0
+    local currentNameTransparency = visualsSettings.nameColorTransparency
     local currentWeaponColor = visualsSettings.weaponColor
-    local currentWeaponTransparency = weaponColorTransparency or 0
+    local currentWeaponTransparency = visualsSettings.weaponColorTransparency
     local currentDistanceColor = visualsSettings.distanceColor
-    local currentDistanceTransparency = distanceColorTransparency or 0
+    local currentDistanceTransparency = visualsSettings.distanceColorTransparency
     local currentHealthTextColor = Color3.fromRGB(255, 255, 255)
-    local currentHealthTextTransparency = 0
 
     if visibleColorEnabled then
-        local col, trans
-        if isVisible then
-            col = visibleColor
-            trans = visibleColorTransparency or 0
-        else
-            col = invisibleColor
-            trans = invisibleColorTransparency or 0
-        end
+        local col = isVisible and visibleColor or invisibleColor
+        local trans = isVisible and visibleColorTransparency or invisibleColorTransparency
         currentBoxColor = col
         currentBoxTransparency = trans
         currentNameColor = col
@@ -1173,7 +1163,6 @@ local function renderEntityVisual(e, model, lp, cam, md2)
         currentDistanceColor = col
         currentDistanceTransparency = trans
         currentHealthTextColor = col
-        currentHealthTextTransparency = trans
     end
 
     local isR15 = e.isR15
@@ -1262,7 +1251,6 @@ local function renderEntityVisual(e, model, lp, cam, md2)
         e.boxOutline.Visible = visualsSettings.boxOutline and true or false
         e.boxBorder.Color = currentBoxColor
         e.boxBorder.Transparency = currentBoxTransparency
-        e.boxOutline.Transparency = currentBoxTransparency
         e.boxBorder.Visible = true
         anyVisible = true
     else
@@ -1395,7 +1383,6 @@ local function renderEntityVisual(e, model, lp, cam, md2)
         local hpInt = math.floor(hp * 100 + 0.5)
         if e.lastHp ~= hpInt then e.healthText.Text = tostring(hpInt); e.lastHp = hpInt end
         e.healthText.Color = currentHealthTextColor
-        e.healthText.Transparency = currentHealthTextTransparency
         e.healthText.Position = Vector2.new(barX - 19, barY - 2)
         e.healthText.Outline = visualsSettings.healthTextOutline
         e.healthText.Visible = true
@@ -1539,11 +1526,12 @@ local function updateChamsForModel(model, e, cam)
         end
         if e.list then
             local chamsColor = visualsSettings.chamsColor
-            local outlineTransparency = visualsSettings.chamsOutline and chamsColorTransparency or 1
+            local chamsTrans = visualsSettings.chamsColorTransparency
+            local outlineTransparency = visualsSettings.chamsOutline and chamsTrans or 1
             for _, hl in ipairs(e.list) do
                 hl.FillColor = chamsColor
+                hl.FillTransparency = chamsTrans
                 hl.OutlineColor = chamsColor
-                hl.FillTransparency = chamsColorTransparency
                 hl.OutlineTransparency = outlineTransparency
             end
         end
@@ -1693,6 +1681,7 @@ local function updateSkeletonForModel(model, e, cam)
         end
         if e.skel then
             local skelColor = visualsSettings.skeletonColor
+            local skelTrans = visualsSettings.skeletonColorTransparency
             for i, pair in ipairs(e.skel.bones) do
                 local p1 = model:FindFirstChild(pair[1])
                 local p2 = model:FindFirstChild(pair[2])
@@ -1704,7 +1693,7 @@ local function updateSkeletonForModel(model, e, cam)
                         l.From = Vector2.new(sp1.X, sp1.Y)
                         l.To = Vector2.new(sp2.X, sp2.Y)
                         l.Color = skelColor
-                        l.Transparency = skeletonColorTransparency
+                        l.Transparency = skelTrans
                         l.Visible = true
                     else
                         e.skel.lines[i].Visible = false
@@ -2077,7 +2066,7 @@ local fovToggle = settingsGroup:AddToggle("FovCircle_toggle", {
 local fovCp1 = fovToggle:AddColorPicker("Fov_color1", {
     Default = combatColor,
     Title = "Fov color",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         fovColor1 = Value
         if Alpha ~= nil then fovAlpha1 = Alpha end
@@ -2087,7 +2076,7 @@ local fovCp1 = fovToggle:AddColorPicker("Fov_color1", {
 local fovCp2 = fovToggle:AddColorPicker("Fov_color2", {
     Default = combatColor,
     Title = "Fov gradient",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         fovColor2 = Value
         if Alpha ~= nil then fovAlpha2 = Alpha end
@@ -2118,7 +2107,7 @@ local lineToggle = settingsGroup:AddToggle("TargetLine_toggle", {
 local lineCp1 = lineToggle:AddColorPicker("TargetLine_color1", {
     Default = combatColor,
     Title = "Target line",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         targetLineColor1 = Value
         if Alpha ~= nil then targetLineAlpha = Alpha end
@@ -2127,7 +2116,7 @@ local lineCp1 = lineToggle:AddColorPicker("TargetLine_color1", {
 local lineCp2 = lineToggle:AddColorPicker("TargetLine_color2", {
     Default = combatColor,
     Title = "Target line gradient",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         targetLineColor2 = Value
         if Alpha ~= nil then targetLineAlpha = Alpha end
@@ -2145,7 +2134,7 @@ local iconToggle = settingsGroup:AddToggle("TargetIcon_toggle", {
 local iconCp1 = iconToggle:AddColorPicker("TargetIcon_color1", {
     Default = combatColor,
     Title = "Target icon",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         targetIconColor1 = Value
         if Alpha ~= nil then targetIconAlpha = Alpha end
@@ -2154,7 +2143,7 @@ local iconCp1 = iconToggle:AddColorPicker("TargetIcon_color1", {
 local iconCp2 = iconToggle:AddColorPicker("TargetIcon_color2", {
     Default = combatColor,
     Title = "Target icon gradient",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         targetIconColor2 = Value
         if Alpha ~= nil then targetIconAlpha = Alpha end
@@ -2296,7 +2285,7 @@ local visibleColorToggle = pvsGroup:AddToggle("Visuals_visibleColor_toggle", {
 visibleColorToggle:AddColorPicker("Visuals_invisibleColor", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Invisible Color",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         invisibleColor = Value
         if Alpha ~= nil then invisibleColorTransparency = Alpha end
@@ -2306,7 +2295,7 @@ visibleColorToggle:AddColorPicker("Visuals_invisibleColor", {
 visibleColorToggle:AddColorPicker("Visuals_visibleColor", {
     Default = Color3.fromRGB(110, 135, 200),
     Title = "Visible Color",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         visibleColor = Value
         if Alpha ~= nil then visibleColorTransparency = Alpha end
@@ -2364,22 +2353,25 @@ local boxToggle = playerVisGroup:AddToggle("Visuals_box_toggle", {
 boxToggle:AddColorPicker("Visuals_box_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Box color",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         visualsSettings.boxColor = Value
-        if Alpha ~= nil then boxColorTransparency = Alpha end
+        if Alpha ~= nil then visualsSettings.boxColorTransparency = Alpha end
         safe(function()
             for _, e in pairs(visualCache) do
                 e.boxFill.Color = Value
                 e.boxBorder.Color = Value
+                e.boxBorder.Transparency = visualsSettings.boxColorTransparency
             end
             for _, e in pairs(sleeperVisualCache) do
                 e.boxFill.Color = Value
                 e.boxBorder.Color = Value
+                e.boxBorder.Transparency = visualsSettings.boxColorTransparency
             end
             for _, e in pairs(npcVisualCache) do
                 e.boxFill.Color = Value
                 e.boxBorder.Color = Value
+                e.boxBorder.Transparency = visualsSettings.boxColorTransparency
             end
         end)
     end,
@@ -2418,14 +2410,23 @@ local weaponToggle = playerVisGroup:AddToggle("Visuals_weapon_toggle", {
 weaponToggle:AddColorPicker("Visuals_weapon_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Weapon color",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         visualsSettings.weaponColor = Value
-        if Alpha ~= nil then weaponColorTransparency = Alpha end
+        if Alpha ~= nil then visualsSettings.weaponColorTransparency = Alpha end
         safe(function()
-            for _, e in pairs(visualCache) do e.weaponText.Color = Value end
-            for _, e in pairs(sleeperVisualCache) do e.weaponText.Color = Value end
-            for _, e in pairs(npcVisualCache) do e.weaponText.Color = Value end
+            for _, e in pairs(visualCache) do
+                e.weaponText.Color = Value
+                e.weaponText.Transparency = visualsSettings.weaponColorTransparency
+            end
+            for _, e in pairs(sleeperVisualCache) do
+                e.weaponText.Color = Value
+                e.weaponText.Transparency = visualsSettings.weaponColorTransparency
+            end
+            for _, e in pairs(npcVisualCache) do
+                e.weaponText.Color = Value
+                e.weaponText.Transparency = visualsSettings.weaponColorTransparency
+            end
         end)
     end,
 })
@@ -2447,14 +2448,23 @@ local nameToggle = playerVisGroup:AddToggle("Visuals_name_toggle", {
 nameToggle:AddColorPicker("Visuals_name_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Name color",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         visualsSettings.nameColor = Value
-        if Alpha ~= nil then nameColorTransparency = Alpha end
+        if Alpha ~= nil then visualsSettings.nameColorTransparency = Alpha end
         safe(function()
-            for _, e in pairs(visualCache) do e.nameText.Color = Value end
-            for _, e in pairs(sleeperVisualCache) do e.nameText.Color = Value end
-            for _, e in pairs(npcVisualCache) do e.nameText.Color = Value end
+            for _, e in pairs(visualCache) do
+                e.nameText.Color = Value
+                e.nameText.Transparency = visualsSettings.nameColorTransparency
+            end
+            for _, e in pairs(sleeperVisualCache) do
+                e.nameText.Color = Value
+                e.nameText.Transparency = visualsSettings.nameColorTransparency
+            end
+            for _, e in pairs(npcVisualCache) do
+                e.nameText.Color = Value
+                e.nameText.Transparency = visualsSettings.nameColorTransparency
+            end
         end)
     end,
 })
@@ -2476,14 +2486,23 @@ local distanceToggle = playerVisGroup:AddToggle("Visuals_distance_toggle", {
 distanceToggle:AddColorPicker("Visuals_distance_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Distance color",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         visualsSettings.distanceColor = Value
-        if Alpha ~= nil then distanceColorTransparency = Alpha end
+        if Alpha ~= nil then visualsSettings.distanceColorTransparency = Alpha end
         safe(function()
-            for _, e in pairs(visualCache) do e.distanceText.Color = Value end
-            for _, e in pairs(sleeperVisualCache) do e.distanceText.Color = Value end
-            for _, e in pairs(npcVisualCache) do e.distanceText.Color = Value end
+            for _, e in pairs(visualCache) do
+                e.distanceText.Color = Value
+                e.distanceText.Transparency = visualsSettings.distanceColorTransparency
+            end
+            for _, e in pairs(sleeperVisualCache) do
+                e.distanceText.Color = Value
+                e.distanceText.Transparency = visualsSettings.distanceColorTransparency
+            end
+            for _, e in pairs(npcVisualCache) do
+                e.distanceText.Color = Value
+                e.distanceText.Transparency = visualsSettings.distanceColorTransparency
+            end
         end)
     end,
 })
@@ -2560,18 +2579,19 @@ local chamsToggle = playerVisGroup:AddToggle("Visuals_chams_toggle", {
 chamsToggle:AddColorPicker("Visuals_chams_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Chams color",
-    Transparency = 0.5,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         visualsSettings.chamsColor = Value
-        if Alpha ~= nil then chamsColorTransparency = Alpha end
+        if Alpha ~= nil then visualsSettings.chamsColorTransparency = Alpha end
         safe(function()
+            local outlineTrans = visualsSettings.chamsOutline and visualsSettings.chamsColorTransparency or 1
             for p, e in pairs(chamsCache) do
                 if e.list then
                     for _, hl in ipairs(e.list) do
                         hl.FillColor = Value
+                        hl.FillTransparency = visualsSettings.chamsColorTransparency
                         hl.OutlineColor = Value
-                        hl.FillTransparency = chamsColorTransparency
-                        hl.OutlineTransparency = visualsSettings.chamsOutline and chamsColorTransparency or 1
+                        hl.OutlineTransparency = outlineTrans
                     end
                 end
             end
@@ -2579,9 +2599,9 @@ chamsToggle:AddColorPicker("Visuals_chams_color", {
                 if e.list then
                     for _, hl in ipairs(e.list) do
                         hl.FillColor = Value
+                        hl.FillTransparency = visualsSettings.chamsColorTransparency
                         hl.OutlineColor = Value
-                        hl.FillTransparency = chamsColorTransparency
-                        hl.OutlineTransparency = visualsSettings.chamsOutline and chamsColorTransparency or 1
+                        hl.OutlineTransparency = outlineTrans
                     end
                 end
             end
@@ -2589,9 +2609,9 @@ chamsToggle:AddColorPicker("Visuals_chams_color", {
                 if e.list then
                     for _, hl in ipairs(e.list) do
                         hl.FillColor = Value
+                        hl.FillTransparency = visualsSettings.chamsColorTransparency
                         hl.OutlineColor = Value
-                        hl.FillTransparency = chamsColorTransparency
-                        hl.OutlineTransparency = visualsSettings.chamsOutline and chamsColorTransparency or 1
+                        hl.OutlineTransparency = outlineTrans
                     end
                 end
             end
@@ -2607,24 +2627,25 @@ chamsToggle:AddSettings("Chams", {
             Callback = function(Value)
                 visualsSettings.chamsOutline = Value == true
                 safe(function()
+                    local trans = Value and visualsSettings.chamsColorTransparency or 1
                     for p, e in pairs(chamsCache) do
                         if e.list then
                             for _, hl in ipairs(e.list) do
-                                hl.OutlineTransparency = Value and chamsColorTransparency or 1
+                                hl.OutlineTransparency = trans
                             end
                         end
                     end
                     for model, e in pairs(sleeperChamsCache) do
                         if e.list then
                             for _, hl in ipairs(e.list) do
-                                hl.OutlineTransparency = Value and chamsColorTransparency or 1
+                                hl.OutlineTransparency = trans
                             end
                         end
                     end
                     for model, e in pairs(npcChamsCache) do
                         if e.list then
                             for _, hl in ipairs(e.list) do
-                                hl.OutlineTransparency = Value and chamsColorTransparency or 1
+                                hl.OutlineTransparency = trans
                             end
                         end
                     end
@@ -2664,15 +2685,16 @@ local skeletonToggle = playerVisGroup:AddToggle("Visuals_skeleton_toggle", {
 skeletonToggle:AddColorPicker("Visuals_skeleton_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Skeleton color",
-    Transparency = 1,
+    Transparency = 0,
     Callback = function(Value, Alpha)
         visualsSettings.skeletonColor = Value
-        if Alpha ~= nil then skeletonColorTransparency = Alpha end
+        if Alpha ~= nil then visualsSettings.skeletonColorTransparency = Alpha end
         safe(function()
             for p, e in pairs(skeletonCache) do
                 if e.skel then
                     for _, line in ipairs(e.skel.lines) do
                         line.Color = Value
+                        line.Transparency = visualsSettings.skeletonColorTransparency
                     end
                 end
             end
@@ -2680,6 +2702,7 @@ skeletonToggle:AddColorPicker("Visuals_skeleton_color", {
                 if e.skel then
                     for _, line in ipairs(e.skel.lines) do
                         line.Color = Value
+                        line.Transparency = visualsSettings.skeletonColorTransparency
                     end
                 end
             end
@@ -2687,6 +2710,7 @@ skeletonToggle:AddColorPicker("Visuals_skeleton_color", {
                 if e.skel then
                     for _, line in ipairs(e.skel.lines) do
                         line.Color = Value
+                        line.Transparency = visualsSettings.skeletonColorTransparency
                     end
                 end
             end
@@ -2810,7 +2834,7 @@ for _, entry in ipairs({
     theme:Colorpicker({
         Text = entry[1],
         Default = entry[3],
-        Transparency = 1,
+        Transparency = 0,
         Callback = function(color) safe(function() hub:SetThemeColor(role, color) end) end,
     })
 end
@@ -2938,7 +2962,7 @@ track(RunService.RenderStepped:Connect(function(dt)
         if renderTimer >= RENDER_INTERVAL then
             renderTimer = 0
             updateVisuals()
-            if fovCircleEnabled then updateFov(mousePos) else hideFov() end
+            if fovCircleEnabled and aimSettings.enabled then updateFov(mousePos) else hideFov() end
 
             local targetScreenPos
             if target and target.Parent then
@@ -3030,7 +3054,6 @@ local loaded = hub:LoadAuto()
 if loaded then safe(function() auto:Set(true, true) end) end
 
 return hub
-
 
 ]==]
 
