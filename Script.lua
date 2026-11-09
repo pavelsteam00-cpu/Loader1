@@ -1145,13 +1145,13 @@ local function renderEntityVisual(e, model, lp, cam, md2)
     end
 
     local currentBoxColor = visualsSettings.boxColor
-    local currentBoxTransparency = boxColorTransparency
+    local currentBoxTransparency = boxColorTransparency or 0
     local currentNameColor = visualsSettings.nameColor
-    local currentNameTransparency = nameColorTransparency
+    local currentNameTransparency = nameColorTransparency or 0
     local currentWeaponColor = visualsSettings.weaponColor
-    local currentWeaponTransparency = weaponColorTransparency
+    local currentWeaponTransparency = weaponColorTransparency or 0
     local currentDistanceColor = visualsSettings.distanceColor
-    local currentDistanceTransparency = distanceColorTransparency
+    local currentDistanceTransparency = distanceColorTransparency or 0
     local currentHealthTextColor = Color3.fromRGB(255, 255, 255)
     local currentHealthTextTransparency = 0
 
@@ -1159,10 +1159,10 @@ local function renderEntityVisual(e, model, lp, cam, md2)
         local col, trans
         if isVisible then
             col = visibleColor
-            trans = visibleColorTransparency
+            trans = visibleColorTransparency or 0
         else
             col = invisibleColor
-            trans = invisibleColorTransparency
+            trans = invisibleColorTransparency or 0
         end
         currentBoxColor = col
         currentBoxTransparency = trans
@@ -2077,7 +2077,7 @@ local fovToggle = settingsGroup:AddToggle("FovCircle_toggle", {
 local fovCp1 = fovToggle:AddColorPicker("Fov_color1", {
     Default = combatColor,
     Title = "Fov color",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         fovColor1 = Value
         if Alpha ~= nil then fovAlpha1 = Alpha end
@@ -2087,7 +2087,7 @@ local fovCp1 = fovToggle:AddColorPicker("Fov_color1", {
 local fovCp2 = fovToggle:AddColorPicker("Fov_color2", {
     Default = combatColor,
     Title = "Fov gradient",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         fovColor2 = Value
         if Alpha ~= nil then fovAlpha2 = Alpha end
@@ -2118,7 +2118,7 @@ local lineToggle = settingsGroup:AddToggle("TargetLine_toggle", {
 local lineCp1 = lineToggle:AddColorPicker("TargetLine_color1", {
     Default = combatColor,
     Title = "Target line",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         targetLineColor1 = Value
         if Alpha ~= nil then targetLineAlpha = Alpha end
@@ -2127,7 +2127,7 @@ local lineCp1 = lineToggle:AddColorPicker("TargetLine_color1", {
 local lineCp2 = lineToggle:AddColorPicker("TargetLine_color2", {
     Default = combatColor,
     Title = "Target line gradient",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         targetLineColor2 = Value
         if Alpha ~= nil then targetLineAlpha = Alpha end
@@ -2145,7 +2145,7 @@ local iconToggle = settingsGroup:AddToggle("TargetIcon_toggle", {
 local iconCp1 = iconToggle:AddColorPicker("TargetIcon_color1", {
     Default = combatColor,
     Title = "Target icon",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         targetIconColor1 = Value
         if Alpha ~= nil then targetIconAlpha = Alpha end
@@ -2154,7 +2154,7 @@ local iconCp1 = iconToggle:AddColorPicker("TargetIcon_color1", {
 local iconCp2 = iconToggle:AddColorPicker("TargetIcon_color2", {
     Default = combatColor,
     Title = "Target icon gradient",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         targetIconColor2 = Value
         if Alpha ~= nil then targetIconAlpha = Alpha end
@@ -2296,7 +2296,7 @@ local visibleColorToggle = pvsGroup:AddToggle("Visuals_visibleColor_toggle", {
 visibleColorToggle:AddColorPicker("Visuals_invisibleColor", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Invisible Color",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         invisibleColor = Value
         if Alpha ~= nil then invisibleColorTransparency = Alpha end
@@ -2306,7 +2306,7 @@ visibleColorToggle:AddColorPicker("Visuals_invisibleColor", {
 visibleColorToggle:AddColorPicker("Visuals_visibleColor", {
     Default = Color3.fromRGB(110, 135, 200),
     Title = "Visible Color",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         visibleColor = Value
         if Alpha ~= nil then visibleColorTransparency = Alpha end
@@ -2364,7 +2364,7 @@ local boxToggle = playerVisGroup:AddToggle("Visuals_box_toggle", {
 boxToggle:AddColorPicker("Visuals_box_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Box color",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         visualsSettings.boxColor = Value
         if Alpha ~= nil then boxColorTransparency = Alpha end
@@ -2418,7 +2418,7 @@ local weaponToggle = playerVisGroup:AddToggle("Visuals_weapon_toggle", {
 weaponToggle:AddColorPicker("Visuals_weapon_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Weapon color",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         visualsSettings.weaponColor = Value
         if Alpha ~= nil then weaponColorTransparency = Alpha end
@@ -2447,7 +2447,7 @@ local nameToggle = playerVisGroup:AddToggle("Visuals_name_toggle", {
 nameToggle:AddColorPicker("Visuals_name_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Name color",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         visualsSettings.nameColor = Value
         if Alpha ~= nil then nameColorTransparency = Alpha end
@@ -2476,7 +2476,7 @@ local distanceToggle = playerVisGroup:AddToggle("Visuals_distance_toggle", {
 distanceToggle:AddColorPicker("Visuals_distance_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Distance color",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         visualsSettings.distanceColor = Value
         if Alpha ~= nil then distanceColorTransparency = Alpha end
@@ -2664,7 +2664,7 @@ local skeletonToggle = playerVisGroup:AddToggle("Visuals_skeleton_toggle", {
 skeletonToggle:AddColorPicker("Visuals_skeleton_color", {
     Default = Color3.fromRGB(255, 255, 255),
     Title = "Skeleton color",
-    Transparency = 0,
+    Transparency = 1,
     Callback = function(Value, Alpha)
         visualsSettings.skeletonColor = Value
         if Alpha ~= nil then skeletonColorTransparency = Alpha end
@@ -2810,7 +2810,7 @@ for _, entry in ipairs({
     theme:Colorpicker({
         Text = entry[1],
         Default = entry[3],
-        Transparency = 0,
+        Transparency = 1,
         Callback = function(color) safe(function() hub:SetThemeColor(role, color) end) end,
     })
 end
@@ -2938,7 +2938,7 @@ track(RunService.RenderStepped:Connect(function(dt)
         if renderTimer >= RENDER_INTERVAL then
             renderTimer = 0
             updateVisuals()
-            if fovCircleEnabled and aimSettings.enabled then updateFov(mousePos) else hideFov() end
+            if fovCircleEnabled then updateFov(mousePos) else hideFov() end
 
             local targetScreenPos
             if target and target.Parent then
